@@ -8,7 +8,7 @@ import { Timeline } from "@/components/ui/timeline";
 import Image from "next/image";
 import Link from "next/link";
 
-type PlatformId = 'youtube' | 'tiktok' | 'instagram' | 'facebook' | 'twitter';
+type PlatformId = 'youtube' | 'tiktok' | 'instagram' | 'facebook';
 
 interface Platform {
   id: PlatformId;
@@ -46,13 +46,6 @@ const platforms: Platform[] = [
     icon: "facebook",
     color: "blue-600",
     description: "Download Facebook videos instantly",
-  },
-  {
-    id: "twitter",
-    name: "Twitter",
-    icon: "twitter",
-    color: "blue-400",
-    description: "Save Twitter videos with one click",
   },
 ];
 
