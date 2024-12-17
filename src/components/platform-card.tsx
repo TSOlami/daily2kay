@@ -3,9 +3,9 @@
 import { motion } from "framer-motion"
 import { Card } from "@/components/ui/card"
 import Link from "next/link"
-import { FaYoutube, FaTiktok, FaInstagram, FaFacebook, FaTwitter } from 'react-icons/fa';
+import { FaYoutube, FaTiktok, FaInstagram, FaFacebook} from 'react-icons/fa';
 
-type PlatformId = 'youtube' | 'tiktok' | 'instagram' | 'facebook' | 'twitter';
+type PlatformId = 'youtube' | 'tiktok' | 'instagram' | 'facebook';
 
 interface PlatformCardProps {
   platform: {
@@ -22,7 +22,6 @@ const platformIcons: Record<PlatformId, JSX.Element> = {
   tiktok: <FaTiktok />,
   instagram: <FaInstagram />,
   facebook: <FaFacebook />,
-  twitter: <FaTwitter />,
 };
 
 export function PlatformCard({ platform }: PlatformCardProps) {
