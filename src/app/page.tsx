@@ -82,6 +82,28 @@ const features = [
   },
 ];
 
+export const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Daily2kay Video Downloader",
+  "applicationCategory": "MultimediaApplication",
+  "operatingSystem": "Any",
+  "description": "Download videos from YouTube, TikTok, Instagram, and Facebook with ease",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": [
+    "YouTube video downloads",
+    "TikTok video downloads",
+    "Instagram video downloads",
+    "Facebook video downloads",
+    "Multiple quality options",
+    "No watermarks"
+  ]
+}
+
 export default function Home() {
   const howItWorksData = [
     {
