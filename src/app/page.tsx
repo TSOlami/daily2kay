@@ -327,7 +327,7 @@ export default function Home() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <a href="#platforms" className="bg-white text-slate-950 dark:text-white px-8 py-3 rounded-full font-semibold transition-colors duration-300">
+            <a href="#platforms" className="bg-white text-white dark:text-slate-950 px-8 py-3 rounded-full font-semibold transition-colors duration-300">
               Start Now
             </a>
           </motion.div>
