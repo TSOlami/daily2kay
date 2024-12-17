@@ -82,7 +82,7 @@ const features = [
   },
 ];
 
-export const jsonLd = {
+const jsonLd = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
   "name": "Daily2kay Video Downloader",
