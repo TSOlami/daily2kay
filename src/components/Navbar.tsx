@@ -16,7 +16,6 @@ export default function Navbar() {
     { id: "tiktok", name: "TikTok", href: "/downloader/tiktok" },
     { id: "instagram", name: "Instagram", href: "/downloader/instagram" },
     { id: "facebook", name: "Facebook", href: "/downloader/facebook" },
-    { id: "twitter", name: "Twitter", href: "/downloader/twitter" },
   ];
 
   useEffect(() => {
