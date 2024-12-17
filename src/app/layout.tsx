@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   title: "Daily2kay - Video Download Platform",
   description: "Download videos from YouTube, TikTok, and more",
   other: {
-    'google-adsense-account': 'ca-pub-3857857958188415',
+    'google-adsense-account': 'ca-pub-1345276010845166',
   },
 };
 
