@@ -171,8 +171,8 @@ export default function Home() {
       content: (
         <div>
           <p className="text-neutral-800 dark:text-neutral-200 text-xs md:text-sm font-normal mb-8">Watch your downloaded video anytime, anywhere, without an internet connection.</p>
-          <div className="grid grid-cols-2 gap-4">
-            <Image
+          <div className="flex justify-center">
+            {/* <Image
               src="/images/images.jpg"
               alt="Enjoy Video"
               width={500}
@@ -191,7 +191,7 @@ export default function Home() {
               alt="Enjoy Video"
               width={500}
               height={500}
-            />
+            /> */}
             <Image
               src="/images/watch.jpg"
               alt="Enjoy Video"
