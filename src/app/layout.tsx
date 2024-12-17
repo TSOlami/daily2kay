@@ -4,7 +4,6 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import GoogleAdsense from "@/components/GoogleAdsense";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,9 +22,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <GoogleAdsense />
-      </head>
       <body className={inter.className}>
         <ThemeProvider
           attribute="class"
