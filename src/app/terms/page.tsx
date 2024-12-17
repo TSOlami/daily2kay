@@ -24,7 +24,7 @@ export default function TermsOfService() {
 
             <section>
               <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">2. Use License</h2>
-              <p>daily2kay grants you a personal, non-exclusive, non-transferable license to use our service for personal, non-commercial purposes.</p>
+              <p>Daily2kay grants you a personal, non-exclusive, non-transferable license to use our service for personal, non-commercial purposes.</p>
             </section>
 
             <section>
@@ -39,7 +39,7 @@ export default function TermsOfService() {
 
             <section>
               <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">5. Limitation of Liability</h2>
-              <p>daily2kay shall not be liable for any indirect, incidental, special, consequential, or punitive damages.</p>
+              <p>Daily2kay shall not be liable for any indirect, incidental, special, consequential, or punitive damages.</p>
             </section>
           </div>
         </Card>
