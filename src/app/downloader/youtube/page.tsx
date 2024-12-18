@@ -26,23 +26,13 @@ type VideoDetails = {
   formats: VideoFormat[];
 };
 
-function formatDuration(seconds: string): string {
-  const secs = parseInt(seconds);
-  const hrs = Math.floor(secs / 3600);
-  const mins = Math.floor((secs % 3600) / 60);
-  const remainingSecs = secs % 60;
-  return [hrs, mins, remainingSecs]
-    .map((v) => v < 10 ? `0${v}` : v)
-    .filter((v, i) => v !== "00" || i > 0)
-    .join(":");
-}
-
 export default function YouTubeDownloader() {
   const [url, setUrl] = useState("");
   const [videoDetails, setVideoDetails] = useState<VideoDetails | null>(null);
   const [selectedQuality, setSelectedQuality] = useState<VideoFormat | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [downloading, setDownloading] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const handleFetchVideo = async () => {
@@ -77,21 +67,33 @@ export default function YouTubeDownloader() {
     }
   };
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     if (!selectedQuality) {
       setError("Please select a video quality.");
       return;
     }
 
-    if (selectedQuality.downloadUrl) {
-      const a = document.createElement('a');
-      a.href = selectedQuality.downloadUrl;
-      a.download = `${videoDetails?.title || 'video'}.mp4`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    } else {
-      setError("Download URL not available");
+    try {
+      setDownloading(true);
+      setError("");
+
+      if (selectedQuality.downloadUrl) {
+        const a = document.createElement('a');
+        a.href = selectedQuality.downloadUrl;
+        a.download = `${videoDetails?.title || 'video'}.${selectedQuality.container || 'mp4'}`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      } else {
+        throw new Error("Download URL not available");
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Download failed');
+    } finally {
+      // Add a small delay before enabling the button again
+      setTimeout(() => {
+        setDownloading(false);
+      }, 2000); // 2 seconds delay
     }
   };
 
@@ -122,7 +124,7 @@ export default function YouTubeDownloader() {
             </Button>
           </div>
 
-          {error && <p className="text-red-500">{error}</p>}
+          {error && <p className="text-red-500 mb-4">{error}</p>}
           
           {videoDetails && (
             <motion.div
@@ -139,16 +141,23 @@ export default function YouTubeDownloader() {
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
                 {videoDetails.title}
               </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-300">
-                Duration: {formatDuration(videoDetails.duration)}
+              <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
+                Duration: {videoDetails.duration}
               </p>
               
               <div className="mt-4 relative">
                 <button
-                  className="w-full p-3 border rounded-lg bg-white dark:bg-gray-700 dark:text-white"
+                  className="w-full p-3 border rounded-lg bg-white dark:bg-gray-700 dark:text-white flex justify-between items-center"
                   onClick={() => setDropdownOpen(!dropdownOpen)}
                 >
-                  {selectedQuality ? `${selectedQuality.qualityLabel}` : 'Select quality'}
+                  <span>
+                    {selectedQuality 
+                      ? `${selectedQuality.qualityLabel}${!selectedQuality.hasAudio ? ' (No Audio)' : ''}`
+                      : 'Select quality'}
+                  </span>
+                  <span className="transform transition-transform duration-200">
+                    {dropdownOpen ? '▼' : '▲'}
+                  </span>
                 </button>
                 
                 {dropdownOpen && videoDetails.formats.length > 0 && (
@@ -172,10 +181,15 @@ export default function YouTubeDownloader() {
 
               {selectedQuality && (
                 <Button
-                  className="mt-4 w-full p-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-300"
+                  className={`mt-4 w-full p-3 rounded-lg transition-colors duration-300 ${
+                    downloading 
+                      ? 'bg-gray-500 cursor-not-allowed'
+                      : 'bg-green-600 hover:bg-green-700'
+                  } text-white`}
                   onClick={handleDownload}
+                  disabled={downloading}
                 >
-                  Download
+                  {downloading ? 'Downloading...' : 'Download'}
                 </Button>
               )}
             </motion.div>
