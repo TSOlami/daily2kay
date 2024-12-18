@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@distube/ytdl-core": "^4.15.8",
     "@radix-ui/react-slot": "^1.1.0",
     "@tobyg74/tiktok-api-dl": "^1.2.2",
     "axios": "^1.7.9",
@@ -27,8 +28,7 @@
     "react-icons": "^5.4.0",
     "ruhend-scraper": "^8.0.5",
     "tailwind-merge": "^2.5.5",
-    "tailwindcss-animate": "^1.0.7",
-    "ytdl-core": "^4.11.5"
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@shadcn/ui": "latest",
