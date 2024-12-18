@@ -1,138 +1,101 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import youtubedl from 'youtube-dl-exec';
-
-type VideoFormat = {
-  format_id: string;
-  format_note: string;
-  filesize: number;
-  url: string;
-  acodec: string;
-  audio_ext: string;
-};
-
-type YouTubeDLResponse = {
-  title: string;
-  thumbnail: string;
-  duration: number;
-  formats: VideoFormat[];
-};
-
-type VideoDetails = {
-  title: string;
-  thumbnail: string;
-  duration: string;
-  formats: VideoFormat[];
-};
-
-const QUALITY_MAP: { [key: string]: string } = {
-  // 4K and 2K formats
-  '401': '4K',
-  '400': '4K',
-  '313': '4K',
-  '271': '2K',
-  '308': '2K',
-  
-  // Standard HD formats
-  '137': '1080p',
-  '136': '720p',
-  '135': '480p',
-  '134': '360p',
-  '133': '240p',
-  '160': '144p',
-  
-  // MP4 container formats
-  '18': '360p MP4',
-  '22': '720p MP4',
-  '37': '1080p MP4',
-  '38': '4K MP4',
-  
-  // WebM formats
-  '248': '1080p WebM',
-  '247': '720p WebM',
-  '244': '480p WebM',
-  '243': '360p WebM',
-  '242': '240p WebM',
-  
-  // Audio formats
-  '140': 'Audio (128kbps)',
-  '251': 'Audio (160kbps)',
-  '250': 'Audio (70kbps)',
-  '249': 'Audio (50kbps)',
-  
-  // Common VP9 formats
-  '315': '4K VP9',
-  '303': '1080p VP9',
-  '302': '720p VP9',
-  
-  // AV1 formats (newer, more efficient)
-  '398': '1080p AV1',
-  '397': '720p AV1',
-  '396': '480p AV1',
-  '395': '360p AV1'
-};
-
-const filterQualities = (qualities: string[]): string[] => {
-  const filteredQualities = qualities
-    .filter(quality => QUALITY_MAP[quality])
-    .map(quality => QUALITY_MAP[quality]);
-  
-  // Remove duplicates and sort by resolution
-  return [...new Set(filteredQualities)].sort((a, b) => {
-    const aNum = parseInt(a) || 0;
-    const bNum = parseInt(b) || 0;
-    return bNum - aNum;
-  });
-};
+import ytdl from 'ytdl-core';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     const { url } = req.body;
 
-    if (!isValidYouTubeUrl(url)) {
+    if (!ytdl.validateURL(url)) {
       return res.status(400).json({ error: 'Invalid YouTube URL' });
     }
 
     try {
-      const info = await youtubedl(url, {
-        dumpSingleJson: true,
-        noWarnings: true,
-        noCheckCertificates: true,
-        preferFreeFormats: true,
-      }) as YouTubeDLResponse;
+      // First get basic info to avoid signature deciphering issues
+      const info = await ytdl.getBasicInfo(url, {
+        requestOptions: {
+          headers: {
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+            'accept-language': 'en-US,en;q=0.9',
+          }
+        }
+      });
 
-      const videoDetails: VideoDetails = {
-        title: info.title,
-        thumbnail: info.thumbnail,
-        duration: info.duration.toString(),
-        formats: Array.from(
-          new Map(
-            info.formats
-              .filter((format) => format.url && format.filesize)
-              .map((format) => [format.format_id, format])
-          ).values()
-        ).map((format) => ({
-          format_id: format.format_id,
-          format_note: format.format_note,
-          filesize: format.filesize,
+      console.log("All available formats:", info.formats.length);
+      
+      // Log a sample format to see its structure
+      console.log("Sample format:", info.formats[0]);
+
+      // Get formats with video
+      const formats = info.formats.filter(format => {
+        // Log each format's key properties
+        console.log("Format:", {
+          itag: format.itag,
+          quality: format.quality,
+          qualityLabel: format.qualityLabel,
+          hasVideo: format.hasVideo,
+          hasAudio: format.hasAudio,
+          mimeType: format.mimeType
+        });
+
+        return format.qualityLabel && format.mimeType?.includes('video/mp4');
+      });
+
+      console.log("Filtered formats:", formats.length);
+      
+      const videoDetails = {
+        title: info.videoDetails.title,
+        thumbnail: info.videoDetails.thumbnails[0].url,
+        duration: info.videoDetails.lengthSeconds,
+        formats: formats.map(format => ({
+          itag: format.itag,
+          qualityLabel: format.qualityLabel,
+          mimeType: format.mimeType,
+          bitrate: format.bitrate,
           url: format.url,
-          acodec: format.acodec,
-          audio_ext: format.audio_ext
-        }))
+          hasAudio: format.hasAudio,
+          hasVideo: format.hasVideo,
+          container: format.container,
+          contentLength: format.contentLength
+        })).sort((a, b) => {
+          // Sort by quality (assuming quality labels are like '1080p', '720p', etc.)
+          const aQuality = parseInt(a.qualityLabel);
+          const bQuality = parseInt(b.qualityLabel);
+          return bQuality - aQuality;
+        })
       };
 
+      // Log the final result
+      console.log("Video details:", {
+        title: videoDetails.title,
+        formatsCount: videoDetails.formats.length,
+        availableQualities: videoDetails.formats.map(f => f.qualityLabel)
+      });
+
       res.status(200).json(videoDetails);
-      console.log(info.formats);
     } catch (error) {
       console.error('Error fetching video details:', error);
-      res.status(500).json({ error: 'Failed to fetch video details' });
+      
+      if (error instanceof Error) {
+        if (error.message.includes('Status code: 429')) {
+          return res.status(429).json({ 
+            error: 'YouTube rate limit reached. Please try again later.' 
+          });
+        }
+        if (error.message.includes('Could not extract')) {
+          return res.status(500).json({ 
+            error: 'Unable to extract video information. This might be due to YouTube restrictions.' 
+          });
+        }
+      }
+      
+      res.status(500).json({ 
+        error: 'Failed to fetch video details',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      });
     }
   } else {
     res.setHeader('Allow', ['POST']);
     res.status(405).end(`Method ${req.method} Not Allowed`);
   }
-}
-
-function isValidYouTubeUrl(url: string): boolean {
-  const regex = /^(https?\:\/\/)?(www\.youtube\.com|youtu\.?be)\/.+$/;
-  return regex.test(url);
 } 
