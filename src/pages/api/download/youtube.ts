@@ -65,8 +65,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           // Put audio-only formats at the end
           if (!a.hasVideo && b.hasVideo) return 1;
           if (a.hasVideo && !b.hasVideo) return -1;
-          // Sort audio-only formats by bitrate
-          return b.bitrate - a.bitrate;
+          // Sort audio-only formats by bitrate, handle undefined bitrate with fallback to 0
+          const aBitrate = a.bitrate ?? 0;
+          const bBitrate = b.bitrate ?? 0;
+          return bBitrate - aBitrate;
         })
       };
 
