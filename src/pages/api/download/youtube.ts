@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import ytdl from 'ytdl-core';
+import ytdl from '@distube/ytdl-core';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
@@ -10,67 +10,75 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-      // First get basic info to avoid signature deciphering issues
-      const info = await ytdl.getBasicInfo(url, {
+      const info = await ytdl.getInfo(url, {
         requestOptions: {
           headers: {
             'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
-            'accept-language': 'en-US,en;q=0.9',
           }
         }
       });
 
-      console.log("All available formats:", info.formats.length);
-      
-      // Log a sample format to see its structure
-      console.log("Sample format:", info.formats[0]);
+      console.log("Total formats available:", info.formats.length);
 
-      // Get formats with video
+      // Filter formats to include video formats (with or without audio)
       const formats = info.formats.filter(format => {
-        // Log each format's key properties
-        console.log("Format:", {
-          itag: format.itag,
-          quality: format.quality,
-          qualityLabel: format.qualityLabel,
-          hasVideo: format.hasVideo,
-          hasAudio: format.hasAudio,
-          mimeType: format.mimeType
-        });
-
-        return format.qualityLabel && format.mimeType?.includes('video/mp4');
+        const hasVideo = format.hasVideo;
+        const isMP4 = format.container === 'mp4';
+        const hasQuality = !!format.qualityLabel;
+        return hasVideo && isMP4 && hasQuality;
       });
 
-      console.log("Filtered formats:", formats.length);
-      
+      // Also include audio-only formats
+      const audioFormats = info.formats.filter(format => {
+        const hasAudioOnly = format.hasAudio && !format.hasVideo;
+        const isMP4 = format.container === 'mp4';
+        return hasAudioOnly && isMP4;
+      });
+
+      const allFormats = [...formats, ...audioFormats];
+      console.log("Filtered formats:", allFormats.length);
+
       const videoDetails = {
         title: info.videoDetails.title,
         thumbnail: info.videoDetails.thumbnails[0].url,
         duration: info.videoDetails.lengthSeconds,
-        formats: formats.map(format => ({
+        formats: allFormats.map(format => ({
           itag: format.itag,
-          qualityLabel: format.qualityLabel,
+          qualityLabel: format.qualityLabel || 'Audio Only',
           mimeType: format.mimeType,
           bitrate: format.bitrate,
           url: format.url,
           hasAudio: format.hasAudio,
           hasVideo: format.hasVideo,
           container: format.container,
-          contentLength: format.contentLength
+          contentLength: format.contentLength,
+          audioQuality: format.audioQuality,
+          // Generate a download URL through our API
+          downloadUrl: `/api/download/youtube/stream?url=${encodeURIComponent(url)}&itag=${format.itag}`
         })).sort((a, b) => {
-          // Sort by quality (assuming quality labels are like '1080p', '720p', etc.)
-          const aQuality = parseInt(a.qualityLabel);
-          const bQuality = parseInt(b.qualityLabel);
-          return bQuality - aQuality;
+          // Sort video formats by quality
+          if (a.hasVideo && b.hasVideo) {
+            const aQuality = parseInt(a.qualityLabel);
+            const bQuality = parseInt(b.qualityLabel);
+            return bQuality - aQuality;
+          }
+          // Put audio-only formats at the end
+          if (!a.hasVideo && b.hasVideo) return 1;
+          if (a.hasVideo && !b.hasVideo) return -1;
+          // Sort audio-only formats by bitrate
+          return b.bitrate - a.bitrate;
         })
       };
 
-      // Log the final result
-      console.log("Video details:", {
-        title: videoDetails.title,
-        formatsCount: videoDetails.formats.length,
-        availableQualities: videoDetails.formats.map(f => f.qualityLabel)
-      });
+      console.log("Available formats:", videoDetails.formats.map(f => ({
+        quality: f.qualityLabel,
+        hasAudio: f.hasAudio,
+        hasVideo: f.hasVideo
+      })));
+
+      if (videoDetails.formats.length === 0) {
+        throw new Error('No suitable formats found');
+      }
 
       res.status(200).json(videoDetails);
     } catch (error) {
@@ -82,9 +90,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             error: 'YouTube rate limit reached. Please try again later.' 
           });
         }
-        if (error.message.includes('Could not extract')) {
-          return res.status(500).json({ 
-            error: 'Unable to extract video information. This might be due to YouTube restrictions.' 
+        if (error.message.includes('No suitable formats found')) {
+          return res.status(404).json({ 
+            error: 'No downloadable formats found for this video.' 
           });
         }
       }
