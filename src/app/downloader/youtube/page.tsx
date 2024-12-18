@@ -16,6 +16,7 @@ type VideoFormat = {
   hasVideo: boolean;
   container: string;
   size?: string;
+  downloadUrl?: string;
 };
 
 type VideoDetails = {
@@ -81,7 +82,17 @@ export default function YouTubeDownloader() {
       setError("Please select a video quality.");
       return;
     }
-    window.open(selectedQuality.url, '_blank');
+
+    if (selectedQuality.downloadUrl) {
+      const a = document.createElement('a');
+      a.href = selectedQuality.downloadUrl;
+      a.download = `${videoDetails?.title || 'video'}.mp4`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } else {
+      setError("Download URL not available");
+    }
   };
 
   return (
