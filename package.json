@@ -28,7 +28,7 @@
     "ruhend-scraper": "^8.0.5",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
-    "youtube-dl-exec": "^3.0.10"
+    "ytdl-core": "^4.11.5"
   },
   "devDependencies": {
     "@shadcn/ui": "latest",
