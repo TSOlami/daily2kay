@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import ytdl from '@distube/ytdl-core';
+import { agent } from '../youtube';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { url, itag } = req.query;
