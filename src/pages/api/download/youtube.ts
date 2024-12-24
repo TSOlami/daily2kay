@@ -1,27 +1,40 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import ytdl from '@distube/ytdl-core';
 
+// Parse cookies from environment variable
+const cookies = (() => {
+  try {
+    const rawCookies = process.env.YOUTUBE_COOKIES;
+    return rawCookies ? JSON.parse(rawCookies) : [];
+  } catch (error) {
+    console.error("Error parsing YOUTUBE_COOKIES:", error);
+    return [];
+  }
+})();
+const agentOptions = {
+  pipelining: 5,
+  maxRedirections: 0,
+  localAddress: "127.0.0.1",
+};
+
+export const agent = ytdl.createAgent(cookies, agentOptions);
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     const { url } = req.body;
 
-    const cookie = process.env.YOUTUBE_COOKIES || '';
+    if (!url) {
+      return res.status(400).json({ error: 'Missing YouTube URL' });
+    }
+
+    
 
     if (!ytdl.validateURL(url)) {
       return res.status(400).json({ error: 'Invalid YouTube URL' });
     }
 
     try {
-      const info = await ytdl.getInfo(url, {
-        requestOptions: {
-          headers: {
-            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            'accept-language': 'en-US,en;q=0.9',
-            'referer': 'https://www.youtube.com',
-            'cookie': cookie
-          },
-        }
-      });
+      const info = await ytdl.getInfo(url, { agent });
 
       console.log("Total formats available:", info.formats.length);
 
