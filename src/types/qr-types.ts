@@ -1,0 +1,1 @@
+export type QRCodeType = 'text' | 'link' | 'wifi' | 'whatsapp' | 'sms' | 'call' | 'email' | 'image' | 'video' 
