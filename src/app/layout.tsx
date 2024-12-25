@@ -1,94 +1,41 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import GoogleAdsense from "@/components/GoogleAdsense";
-import { siteConfig } from "./seo.config";
+import './globals.css'
+import { Inter } from 'next/font/google'
+import Link from 'next/link'
+import { Toaster } from '@/components/ui/toaster'
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['latin'] })
 
-export const metadata: Metadata = {
-  metadataBase: new URL(siteConfig.url),
-  title: {
-    default: siteConfig.name,
-    template: `%s | ${siteConfig.name}`,
-  },
-  description: siteConfig.description,
-  keywords: siteConfig.keywords,
-  authors: siteConfig.authors,
-  creator: siteConfig.creator,
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: siteConfig.url,
-    title: siteConfig.name,
-    description: siteConfig.description,
-    siteName: siteConfig.name,
-    images: [
-      {
-        url: siteConfig.ogImage,
-        width: 1200,
-        height: 630,
-        alt: siteConfig.name,
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: siteConfig.name,
-    description: siteConfig.description,
-    images: [siteConfig.ogImage],
-    creator: "@daily2kay",
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-  verification: {
-    google: "your-google-site-verification-code",
-  },
-  alternates: {
-    canonical: siteConfig.url,
-  },
-};
+export const metadata = {
+  title: 'Daily2kay QR Code Generator',
+  description: 'Generate QR codes easily',
+}
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <script 
-          async 
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3857857958188415"
-          crossOrigin="anonymous"
-        />
-      </head>
+    <html lang="en">
       <body className={inter.className}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Navbar />
-          <main className="min-h-screen bg-background">
-            {children}
-          </main>
-          <Footer />
-        </ThemeProvider>
+        <nav className="p-4 border-b">
+          <div className="max-w-3xl mx-auto flex justify-between items-center">
+            <Link href="/" className="font-bold text-xl">
+              Daily2kay
+            </Link>
+            <div className="space-x-4">
+              <Link href="/terms" className="hover:underline">
+                Terms of Service
+              </Link>
+              <Link href="/privacy" className="hover:underline">
+                Privacy Policy
+              </Link>
+            </div>
+          </div>
+        </nav>
+        {children}
+        <Toaster />
       </body>
     </html>
-  );
-}
+  )
+} 
