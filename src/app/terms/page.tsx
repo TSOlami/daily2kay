@@ -1,49 +1,26 @@
-"use client";
-
-import React from "react";
-import { motion } from "framer-motion";
-import { Card } from "@/components/ui/card";
-
 export default function TermsOfService() {
   return (
-    <div className="container mx-auto px-4 py-8">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="max-w-3xl mx-auto"
-      >
-        <Card className="p-8 shadow-lg rounded-lg bg-white dark:bg-gray-800">
-          <h1 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Terms of Service</h1>
-          
-          <div className="space-y-6 text-gray-700 dark:text-gray-300">
-            <section>
-              <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">1. Acceptance of Terms</h2>
-              <p>By accessing and using daily2kay, you agree to be bound by these Terms of Service.</p>
-            </section>
+    <div className="min-h-screen p-8">
+      <div className="max-w-3xl mx-auto">
+        <h1 className="text-4xl font-bold mb-8">Terms of Service</h1>
+        
+        <div className="prose prose-slate dark:prose-invert">
+          <h2>1. Terms</h2>
+          <p>By accessing Daily2kay QR Code Generator, you agree to be bound by these terms of service and agree that you are responsible for compliance with any applicable local laws.</p>
 
-            <section>
-              <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">2. Use License</h2>
-              <p>Daily2kay grants you a personal, non-exclusive, non-transferable license to use our service for personal, non-commercial purposes.</p>
-            </section>
+          <h2>2. Use License</h2>
+          <p>Permission is granted to temporarily use this website for personal, non-commercial transitory viewing only.</p>
 
-            <section>
-              <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">3. Fair Use</h2>
-              <p>Users are responsible for ensuring their downloads comply with the respective platform's terms of service and copyright laws.</p>
-            </section>
+          <h2>3. Disclaimer</h2>
+          <p>The materials on Daily2kay's website are provided on an 'as is' basis. Daily2kay makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.</p>
 
-            <section>
-              <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">4. Service Modifications</h2>
-              <p>We reserve the right to modify or discontinue our service at any time without notice.</p>
-            </section>
+          <h2>4. Limitations</h2>
+          <p>In no event shall Daily2kay or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on Daily2kay's website.</p>
 
-            <section>
-              <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">5. Limitation of Liability</h2>
-              <p>Daily2kay shall not be liable for any indirect, incidental, special, consequential, or punitive damages.</p>
-            </section>
-          </div>
-        </Card>
-      </motion.div>
+          <h2>5. Accuracy of materials</h2>
+          <p>The materials appearing on Daily2kay's website could include technical, typographical, or photographic errors. Daily2kay does not warrant that any of the materials on its website are accurate, complete or current.</p>
+        </div>
+      </div>
     </div>
-  );
+  )
 } 
