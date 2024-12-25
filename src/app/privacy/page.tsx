@@ -1,44 +1,29 @@
-"use client";
-
-import React from "react";
-import { motion } from "framer-motion";
-import { Card } from "@/components/ui/card";
-
 export default function PrivacyPolicy() {
   return (
-    <div className="container mx-auto px-4 py-8">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="max-w-3xl mx-auto"
-      >
-        <Card className="p-8 shadow-lg rounded-lg bg-white dark:bg-gray-800">
-          <h1 className="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Privacy Policy</h1>
-          
-          <div className="space-y-6 text-gray-700 dark:text-gray-300">
-            <section>
-              <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">Data Collection</h2>
-              <p>We collect minimal data necessary for service functionality. No personal information is stored.</p>
-            </section>
+    <div className="min-h-screen p-8">
+      <div className="max-w-3xl mx-auto">
+        <h1 className="text-4xl font-bold mb-8">Privacy Policy</h1>
+        
+        <div className="prose prose-slate dark:prose-invert">
+          <h2>Information Collection and Use</h2>
+          <p>Daily2kay QR Code Generator does not store any of the text or URLs you use to generate QR codes. All QR code generation is performed client-side in your browser.</p>
 
-            <section>
-              <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">Usage of Information</h2>
-              <p>Any collected data is used solely for improving our service and user experience.</p>
-            </section>
+          <h2>Data Security</h2>
+          <p>Your privacy is important to us. We do not collect, store, or transmit any personal information when you use our QR code generator.</p>
 
-            <section>
-              <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">Cookies</h2>
-              <p>We use essential cookies to ensure the proper functioning of our service.</p>
-            </section>
+          <h2>Cookies</h2>
+          <p>This website does not use cookies or any form of tracking.</p>
 
-            <section>
-              <h2 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">Third-Party Services</h2>
-              <p>We may use third-party services for analytics and service improvement.</p>
-            </section>
-          </div>
-        </Card>
-      </motion.div>
+          <h2>Third-party Services</h2>
+          <p>We do not use any third-party services that collect user data.</p>
+
+          <h2>Changes to This Privacy Policy</h2>
+          <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
+
+          <h2>Contact Us</h2>
+          <p>If you have any questions about this Privacy Policy, please contact us.</p>
+        </div>
+      </div>
     </div>
-  );
+  )
 } 
