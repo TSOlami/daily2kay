@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://daily2kay.com
+
+# Sitemaps
+Sitemap: https://daily2kay.com/sitemap.xml
