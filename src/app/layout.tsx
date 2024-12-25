@@ -1,3 +1,4 @@
+import React from 'react'
 import './globals.css'
 import { Inter } from 'next/font/google'
 import Link from 'next/link'
@@ -8,6 +9,16 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata = {
   title: 'Daily2kay QR Code Generator',
   description: 'Generate QR codes easily',
+  image: '/og.png',
+  url: 'https://daily2kay.com',
+  type: 'website',
+  keywords: ['QR code', 'generator', 'tool'],
+  theme_color: '#ffffff',
+  background_color: '#ffffff',
+  locale: 'en_US',
+  robots: 'follow, index',
+  googlebot: 'follow, index',
+  google: 'notranslate',
 }
 
 export default function RootLayout({
