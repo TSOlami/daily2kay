@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://daily2kay.com/sitemap.xml 
