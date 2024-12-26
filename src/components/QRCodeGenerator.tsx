@@ -152,17 +152,17 @@ export default function QRCodeGenerator() {
 
   return (
     <Card className="p-6">
-      <Tabs defaultValue="link" onValueChange={(value) => setSelectedType(value as QRCodeType)}>
-        <TabsList className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-9 gap-2">
-          <TabsTrigger value="link">Link</TabsTrigger>
-          <TabsTrigger value="email">Email</TabsTrigger>
-          <TabsTrigger value="text">Text</TabsTrigger>
-          <TabsTrigger value="call">Call</TabsTrigger>
-          <TabsTrigger value="sms">SMS</TabsTrigger>
-          <TabsTrigger value="whatsapp">WhatsApp</TabsTrigger>
-          <TabsTrigger value="wifi">Wi-Fi</TabsTrigger>
-          <TabsTrigger value="image">Image</TabsTrigger>
-          <TabsTrigger value="video">Video</TabsTrigger>
+      <Tabs defaultValue="link" onValueChange={(value) => setSelectedType(value as QRCodeType)} className="w-full">
+        <TabsList className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-9 gap-2">
+          <TabsTrigger value="link" className="w-full">Link</TabsTrigger>
+          <TabsTrigger value="email" className="w-full">Email</TabsTrigger>
+          <TabsTrigger value="text" className="w-full">Text</TabsTrigger>
+          <TabsTrigger value="call" className="w-full">Call</TabsTrigger>
+          <TabsTrigger value="sms" className="w-full">SMS</TabsTrigger>
+          <TabsTrigger value="whatsapp" className="w-full">WhatsApp</TabsTrigger>
+          <TabsTrigger value="wifi" className="w-full">Wi-Fi</TabsTrigger>
+          <TabsTrigger value="image" className="w-full">Image</TabsTrigger>
+          <TabsTrigger value="video" className="w-full">Video</TabsTrigger>
         </TabsList>
 
         <div className="mt-4 space-y-4">
@@ -202,7 +202,7 @@ export default function QRCodeGenerator() {
               </Button>
             </CollapsibleTrigger>
             <CollapsibleContent className="space-y-4 mt-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="backgroundColor">Background Color</Label>
                   <Input
@@ -332,7 +332,7 @@ export default function QRCodeGenerator() {
                 <QRCodeSVG
                   id="QRCode"
                   value={qrValue}
-                  size={256}
+                  size={Math.min(256, window.innerWidth - 64)}
                   level="H"
                   bgColor={qrOptions.backgroundColor}
                   fgColor={qrOptions.dotsColor}
