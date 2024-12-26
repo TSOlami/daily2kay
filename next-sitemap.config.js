@@ -7,11 +7,16 @@ const config = {
     priority: 0.7,
     exclude: [],
     transform: async (config, path) => {
+        const baseXML = `
+      <?xml version="1.0" encoding="UTF-8"?>
+      <?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>
+    `;
       return {
         loc: path, // Include path in the sitemap
         changefreq: 'daily',
         priority: 0.7,
         lastmod: new Date().toISOString(),
+        baseXML,
       };
     },
     additionalPaths: async (config) => {
