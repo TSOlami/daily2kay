@@ -1,24 +1,14 @@
-import React from 'react'
 import './globals.css'
 import { Inter } from 'next/font/google'
 import Link from 'next/link'
 import { Toaster } from '@/components/ui/toaster'
+import { Footer } from '@/components/Footer'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
   title: 'Daily2kay QR Code Generator',
-  description: 'Generate QR codes easily',
-  image: '/og.png',
-  url: 'https://daily2kay.com',
-  type: 'website',
-  keywords: ['QR code', 'generator', 'tool'],
-  theme_color: '#ffffff',
-  background_color: '#ffffff',
-  locale: 'en_US',
-  robots: 'follow, index',
-  googlebot: 'follow, index',
-  google: 'notranslate',
+  description: 'Generate QR codes easily with advanced customization options',
 }
 
 export default function RootLayout({
@@ -27,24 +17,21 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <nav className="p-4 border-b">
-          <div className="max-w-3xl mx-auto flex justify-between items-center">
-            <Link href="/" className="font-bold text-xl">
-              Daily2kay
-            </Link>
-            <div className="space-x-4">
-              <Link href="/terms" className="hover:underline">
-                Terms of Service
-              </Link>
-              <Link href="/privacy" className="hover:underline">
-                Privacy Policy
+    <html lang="en" className="h-full">
+      <body className={`${inter.className} min-h-full flex flex-col`}>
+        <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center h-16">
+              <Link href="/" className="font-bold text-xl">
+                Daily2kay
               </Link>
             </div>
           </div>
         </nav>
-        {children}
+        <main className="flex-1">
+          {children}
+        </main>
+        <Footer />
         <Toaster />
       </body>
     </html>
