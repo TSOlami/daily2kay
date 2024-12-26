@@ -21,7 +21,9 @@ const config = {
     },
     additionalPaths: async (config) => {
       return [
-        { loc: '/terms', changefreq: 'monthly', priority: 0.5 }, // Add manually for app routes
+        { loc: '/about', changefreq: 'monthly', priority: 0.5 },
+        { loc: '/contact', changefreq: 'monthly', priority: 0.5 },
+        { loc: '/terms', changefreq: 'monthly', priority: 0.5 },
         { loc: '/privacy', changefreq: 'monthly', priority: 0.5 }, // Add manually for app routes
         { loc: '/', changefreq: 'daily', priority: 1.0 }, // Add root manually if missing
       ];
